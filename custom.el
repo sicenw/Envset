@@ -55,7 +55,7 @@
 ;; ---- Key-chords ----
 (key-chord-define-global "OO" 'other-window)
 (key-chord-define-global "KK" 'delete-window)
-(key-chord-define-global "WW" 'delete-other-windows)
+(key-chord-define-global "DD" 'delete-other-windows)
 (key-chord-define-global "BB" 'ido-switch-buffer) 
 (key-chord-define-global "LL" (lambda()
                                 (interactive)
@@ -95,7 +95,8 @@
 ;; --------------------------------------
 ;;  File modification required features:
 ;; --------------------------------------
-;; Mod: ~/.emacs.d/modules/prelude-c.el: (c-basic-offset 2)
-;; Add: ~/.emacs.d/modules/prelude-c.el: (local-unset-key (kbd "C-M-j"))
-;; Mod: ~/.emacs.d/elpa/smartparens/smartparens.el: ("C-s-s" . sp-splice-sexp)
+;; Mod: ~/.emacs.d/modules/prelude-c.el: 39: (c-basic-offset 2)
+;; Add: ~/.emacs.d/modules/prelude-c.el: +40: (local-unset-key (kbd "C-M-j"))
+;; Mod: ~/.emacs.d/elpa/smartparens/smartparens.el: 206: ("M-D" . sp-splice-sexp)
+;; Mod: ~/.emacs.d/elpa/god-mode/god-mode.el: 45: ("m" . "M-")
 ;; --------------------------------------
