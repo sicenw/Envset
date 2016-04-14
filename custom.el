@@ -21,7 +21,7 @@
 (set-frame-parameter nil 'fullscreen 'fullboth)
 
 (when (not (display-graphic-p))
-  (menu-bar-mode -1)  
+  (menu-bar-mode -1)
   (global-hl-line-mode -1))
 (when  (display-graphic-p)
   (setq confirm-kill-emacs 'yes-or-no-p)
@@ -30,6 +30,10 @@
 (setq display-time-day-and-date 't)
 (setq display-time-24hr-format 't)
 (display-time)
+
+;; ---- File type recognition ----
+(add-to-list 'auto-mode-alist '(".bash_aliases" . shell-script-mode))
+(setq auto-mode-alist (cons (cons "\\.h\\'" 'c++-mode) auto-mode-alist))
 
 ;; ---- Additional functions ----
 (defun comment-dwim-line (&optional arg)
@@ -43,7 +47,7 @@
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
 
-;; ---- Add comfortable key bindings ----
+;; ---- Additional global key bindings ----
 (global-set-key (kbd "C-\\")  'undo-tree-redo)
 (global-set-key (kbd "C-s-p") 'move-text-up)
 (global-set-key (kbd "C-s-n") 'move-text-down)
@@ -52,11 +56,11 @@
 (global-set-key (kbd "s-SPC") 'just-one-space)
 (global-set-key (kbd "C-;")   'god-local-mode)
 
-;; ---- Key-chords ----
+;; ---- Additional Key-chord bindings ----
 (key-chord-define-global "OO" 'other-window)
-(key-chord-define-global "KK" 'delete-window)
-(key-chord-define-global "DD" 'delete-other-windows)
-(key-chord-define-global "BB" 'ido-switch-buffer) 
+(key-chord-define-global "DD" 'delete-window)
+(key-chord-define-global "KK" 'delete-other-windows)
+(key-chord-define-global "BB" 'ido-switch-buffer)
 (key-chord-define-global "LL" (lambda()
                                 (interactive)
                                 (split-window-right)
@@ -66,10 +70,10 @@
                                 (interactive)
                                 (kill-buffer (current-buffer))
                                 (delete-window)))
-(key-chord-define-global ";;"  'comment-dwim-line)
+(key-chord-define-global ";;" 'comment-dwim-line)
 ;; (key-chord-define latex-mode-map "{}"  "{}\C-b")
 
-;; ---- Multiple-cursors ----
+;; ---- Multiple-cursors configs ----
 (require 'multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -77,10 +81,16 @@
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 (global-set-key (kbd "C-M-<mouse-1>") 'mc/add-cursor-on-click)
 
-;; ---- God-mode ----
+;; ---- God-mode configs ----
 (require 'god-mode)
 (define-key god-local-mode-map (kbd ".") 'repeat)
 (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+(define-key god-local-mode-map (kbd "M-n") (lambda()
+                                             (interactive)
+                                             (next-line 5)))
+(define-key god-local-mode-map (kbd "M-p") (lambda()
+                                             (interactive)
+                                             (previous-line 5)))
 (require 'god-mode-isearch)
 (define-key isearch-mode-map (kbd "M-a") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "M-a") 'god-mode-isearch-disable)
@@ -90,7 +100,6 @@
                       'box)))
 (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
 (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor)
-
 
 ;; --------------------------------------
 ;;  File modification required features:
