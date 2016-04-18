@@ -12,7 +12,8 @@
 (setq prelude-whitespace nil)
 (setq prelude-flyspell nil)
 (setq electric-indent-mode nil)
-(setq prelude-auto-save nil)
+;; (setq prelude-auto-save nil)
+(setq prelude-auto-save t)
 (global-set-key [remap move-beginning-of-line]
                 'move-beginning-of-line)
 
@@ -101,6 +102,7 @@
 (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
 (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor)
 
+
 ;; --------------------------------------
 ;;  File modification required features:
 ;; --------------------------------------
@@ -108,4 +110,5 @@
 ;; Add: ~/.emacs.d/modules/prelude-c.el: +40: (local-unset-key (kbd "C-M-j"))
 ;; Mod: ~/.emacs.d/elpa/smartparens/smartparens.el: 206: ("M-D" . sp-splice-sexp)
 ;; Mod: ~/.emacs.d/elpa/god-mode/god-mode.el: 45: ("m" . "M-")
+;; Mod: ~/.emacs.d/core/prelude-editor.el: 171-175: ;; ...
 ;; --------------------------------------
