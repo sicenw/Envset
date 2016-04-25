@@ -13,10 +13,8 @@
 (setq prelude-flyspell nil)
 (setq electric-indent-mode nil)
 ;; (setq prelude-auto-save nil)
-(setq prelude-auto-save t)
-(global-set-key [remap move-beginning-of-line]
-                'move-beginning-of-line)
-
+(global-set-key [remap move-beginning-of-line] 'move-beginning-of-line)
+(global-flycheck-mode -1)
 
 ;; ---- Wanted features ----
 (set-frame-parameter nil 'fullscreen 'fullboth)
@@ -59,7 +57,6 @@
 
 ;; ---- Additional Key-chord bindings ----
 (key-chord-define-global "OO" 'other-window)
-(key-chord-define-global "DD" 'delete-window)
 (key-chord-define-global "KK" 'delete-other-windows)
 (key-chord-define-global "BB" 'ido-switch-buffer)
 (key-chord-define-global "LL" (lambda()
@@ -67,7 +64,7 @@
                                 (split-window-right)
                                 (other-window 1)
                                 (prelude-switch-to-previous-buffer)))
-(key-chord-define-global "XX" (lambda()
+(key-chord-define-global "DD" (lambda()
                                 (interactive)
                                 (kill-buffer (current-buffer))
                                 (delete-window)))
@@ -93,15 +90,15 @@
                                              (interactive)
                                              (previous-line 5)))
 (require 'god-mode-isearch)
+(define-key god-local-mode-map [escape] 'keyboard-quit)
 (define-key isearch-mode-map (kbd "M-a") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "M-a") 'god-mode-isearch-disable)
 (defun god-mode-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
-                        '(bar . 3)
+                        '(bar . 2)
                       'box)))
 (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
 (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor)
-
 
 ;; --------------------------------------
 ;;  File modification required features:
