@@ -3,8 +3,10 @@
 ;; To be put at ~/.emacs.d/personal/
 ;; --------------------------------------
 
+;; ---- Mac specifics ----
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
+(set-frame-parameter nil 'fullscreen 'fullboth)
 
 ;; ---- Disable uncomfortable features ----
 ;; (disable-theme 'zenburn)
@@ -12,25 +14,23 @@
 (setq prelude-whitespace nil)
 (setq prelude-flyspell nil)
 (setq electric-indent-mode nil)
-;; (setq prelude-auto-save nil)
+(setq prelude-auto-save nil)
 (global-set-key [remap move-beginning-of-line] 'move-beginning-of-line)
 (global-flycheck-mode -1)
 
-;; ---- Wanted features ----
-(set-frame-parameter nil 'fullscreen 'fullboth)
-
+;; ---- Additional features ----
 (when (not (display-graphic-p))
   (menu-bar-mode -1)
   (global-hl-line-mode -1))
 (when  (display-graphic-p)
-  (setq confirm-kill-emacs 'yes-or-no-p)
-  (scroll-bar-mode -1))
+  (scroll-bar-mode -1)
+  (setq confirm-kill-emacs 'yes-or-no-p))
 
 (setq display-time-day-and-date 't)
 (setq display-time-24hr-format 't)
 (display-time)
 
-;; ---- File type recognition ----
+;; ---- Additional auto-mode ----
 (add-to-list 'auto-mode-alist '(".bash_aliases" . shell-script-mode))
 (setq auto-mode-alist (cons (cons "\\.h\\'" 'c++-mode) auto-mode-alist))
 
@@ -57,19 +57,18 @@
 
 ;; ---- Additional Key-chord bindings ----
 (key-chord-define-global "OO" 'other-window)
-(key-chord-define-global "KK" 'delete-other-windows)
-(key-chord-define-global "BB" 'ido-switch-buffer)
+(key-chord-define-global "KK" 'delete-window)
+(key-chord-define-global "DD" 'delete-other-windows)
 (key-chord-define-global "LL" (lambda()
                                 (interactive)
                                 (split-window-right)
                                 (other-window 1)
-                                (prelude-switch-to-previous-buffer)))
-(key-chord-define-global "DD" (lambda()
+                                (ido-switch-buffer)))
+(key-chord-define-global "XX" (lambda()
                                 (interactive)
                                 (kill-buffer (current-buffer))
                                 (delete-window)))
 (key-chord-define-global ";;" 'comment-dwim-line)
-;; (key-chord-define latex-mode-map "{}"  "{}\C-b")
 
 ;; ---- Multiple-cursors configs ----
 (require 'multiple-cursors)
@@ -89,23 +88,28 @@
 (define-key god-local-mode-map (kbd "M-p") (lambda()
                                              (interactive)
                                              (previous-line 5)))
+(define-key god-local-mode-map [escape]  'keyboard-quit)
 (require 'god-mode-isearch)
-(define-key god-local-mode-map [escape] 'keyboard-quit)
 (define-key isearch-mode-map (kbd "M-a") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "M-a") 'god-mode-isearch-disable)
 (defun god-mode-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
-                        '(bar . 2)
+                        '(bar . 3)
                       'box)))
 (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
 (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor)
+
+;; ---- Other mode specific setup ----
+(define-key company-active-map (kbd "<return>") nil)
+(define-key company-active-map (kbd "RET") nil)
+(define-key company-active-map (kbd "M-i") 'company-complete-selection)
+(add-hook 'latex-mode-hook 'smartparens-mode)
 
 ;; --------------------------------------
 ;;  File modification required features:
 ;; --------------------------------------
 ;; Mod: ~/.emacs.d/modules/prelude-c.el: 39: (c-basic-offset 2)
-;; Add: ~/.emacs.d/modules/prelude-c.el: +40: (local-unset-key (kbd "C-M-j"))
+;; Add: ~/.emacs.d/modules/prelude-c.el: 40: (local-unset-key (kbd "C-M-j"))
 ;; Mod: ~/.emacs.d/elpa/smartparens/smartparens.el: 206: ("M-D" . sp-splice-sexp)
 ;; Mod: ~/.emacs.d/elpa/god-mode/god-mode.el: 45: ("m" . "M-")
-;; Mod: ~/.emacs.d/core/prelude-editor.el: 171-175: ;; ...
 ;; --------------------------------------
