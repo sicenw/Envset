@@ -15,7 +15,7 @@
 (setq prelude-flyspell nil)
 (setq electric-indent-mode nil)
 (setq prelude-auto-save nil)
-(global-set-key [remap move-beginning-of-line] 'move-beginning-of-line)
+;; (global-set-key [remap move-beginning-of-line] 'move-beginning-of-line)
 (global-flycheck-mode -1)
 
 ;; ---- Additional features ----
@@ -104,6 +104,7 @@
 (define-key company-active-map (kbd "RET") nil)
 (define-key company-active-map (kbd "M-i") 'company-complete-selection)
 (add-hook 'latex-mode-hook 'smartparens-mode)
+(add-hook 'latex-mode-hook (lambda() (key-chord-define latex-mode-map "==" "&=& ")))
 
 ;; --------------------------------------
 ;;  File modification required features:
