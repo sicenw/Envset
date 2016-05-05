@@ -18,6 +18,10 @@
 (global-flycheck-mode -1)
 (remove-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
+;; ---- Adjusted features ----
+(setq scroll-margin 2)
+(setq scroll-conservatively 5)
+
 ;; ---- Additional features ----
 (when (not (display-graphic-p))
   (menu-bar-mode -1)
