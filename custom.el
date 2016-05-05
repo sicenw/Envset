@@ -16,6 +16,7 @@
 (setq electric-indent-mode nil)
 (setq prelude-auto-save nil)
 (global-flycheck-mode -1)
+(remove-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 ;; ---- Additional features ----
 (when (not (display-graphic-p))
