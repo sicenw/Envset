@@ -8,7 +8,41 @@
 (setq display-time-24hr-format 't)
 (display-time)
 
-(load-file "~/.emacs.d/afternoon-theme.el")
+;; (load-theme 'afternoon)
+;; (load-file "~/.emacs.d/afternoon-theme.el")
+(load-file "~/.emacs.d/god-mode/cl-lib-0.5.el")
+;; (load-file "~/.emacs.d/autopair/autopair.el")
+;; (require 'autopair)
+
+;; ---- god-mode ----
+;; https://github.com/chrisdone/god-mode.git
+;; https://elpa.gnu.org/packages/cl-lib-0.5.el
+;; ------------------
+(load-file "~/.emacs.d/god-mode/god-mode.el")
+(require 'god-mode)
+(global-set-key (kbd "C-c ;")  'god-mode-all)
+(define-key god-local-mode-map (kbd ".") 'repeat)
+(define-key god-local-mode-map (kbd "i") 'god-local-mode)
+(define-key god-local-mode-map (kbd "M-n") (lambda()
+                                             (interactive)
+                                             (next-line 5)))
+(define-key god-local-mode-map (kbd "M-p") (lambda()
+                                             (interactive)
+                                             (previous-line 5)))
+(load-file "~/.emacs.d/god-mode/god-mode-isearch.el")
+(require 'god-mode-isearch)
+(define-key isearch-mode-map (kbd "M-a") 'god-mode-isearch-activate)
+(define-key god-mode-isearch-map (kbd "M-a") 'god-mode-isearch-disable)
+(define-key god-mode-isearch-map (kbd "M-v") 'scroll-down)
+(define-key god-mode-isearch-map (kbd "v") 'scroll-up)
+(define-key god-mode-isearch-map (kbd "n") (lambda()
+                                             (interactive)
+                                             (isearch-exit)
+                                             (next-line)))
+(define-key god-mode-isearch-map (kbd "p") (lambda()
+                                             (interactive)
+                                             (isearch-exit)
+                                             (previous-line)))
 
 (defun duplicate-current-line-or-region (arg)
   (interactive "p")
