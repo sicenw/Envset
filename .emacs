@@ -10,15 +10,18 @@
 
 ;; (load-theme 'afternoon)
 ;; (load-file "~/.emacs.d/afternoon-theme.el")
-(load-file "~/.emacs.d/god-mode/cl-lib-0.5.el")
-;; (load-file "~/.emacs.d/autopair/autopair.el")
-;; (require 'autopair)
+(load-file "~/.emacs.d/cl-lib-0.5.el")
+
+;; ---- autopair ----
+(add-to-list 'load-path "~/.emacs.d/autopair")
+(require 'autopair)
+(autopair-global-mode)
 
 ;; ---- god-mode ----
 ;; https://github.com/chrisdone/god-mode.git
 ;; https://elpa.gnu.org/packages/cl-lib-0.5.el
 ;; ------------------
-(load-file "~/.emacs.d/god-mode/god-mode.el")
+(add-to-list 'load-path "~/.emacs.d/god-mode")
 (require 'god-mode)
 (global-set-key (kbd "C-c ;")  'god-mode-all)
 (define-key god-local-mode-map (kbd ".") 'repeat)
@@ -29,7 +32,6 @@
 (define-key god-local-mode-map (kbd "M-p") (lambda()
                                              (interactive)
                                              (previous-line 5)))
-(load-file "~/.emacs.d/god-mode/god-mode-isearch.el")
 (require 'god-mode-isearch)
 (define-key isearch-mode-map (kbd "M-a") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "M-a") 'god-mode-isearch-disable)
@@ -44,6 +46,7 @@
                                              (isearch-exit)
                                              (previous-line)))
 
+;; ---- Useful functions ----
 (defun duplicate-current-line-or-region (arg)
   (interactive "p")
   (let (beg end (origin (point)))
