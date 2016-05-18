@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        c-electric-brace
         c-electric-colon
         c-electric-delete-forward
         c-electric-lt-gt
@@ -14,8 +15,11 @@
         c-indent-line-or-region
         comment-dwim-line
         crux-duplicate-and-comment-current-line-or-region
+        crux-duplicate-current-line-or-region
+        delete-horizontal-space
         downcase-region
         easy-kill
+        electric-newline-and-maybe-indent
         keyboard-quit
         kill-region
         sp-backward-sexp
@@ -23,11 +27,11 @@
         sp-forward-sexp
         sp-remove-active-pair-overlay
         sp-splice-sexp
-        upcase-region
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        avy-goto-word-1
         crux-recentf-ido-find-file
         crux-switch-to-previous-buffer
         god-local-mode
