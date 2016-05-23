@@ -46,7 +46,7 @@
    Replaces default behaviour of comment-dwim, when it inserts comment at the end of the line."
   (interactive "*P")
   (comment-normalize-vars)
-  (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
+  (if (not (region-active-p))
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
 
@@ -102,15 +102,9 @@
 (define-key isearch-mode-map (kbd "M-a") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "M-a") 'god-mode-isearch-disable)
 (define-key god-mode-isearch-map (kbd "M-v") 'scroll-down-command)
-(define-key god-mode-isearch-map (kbd "v")   'scroll-up-command)
-(define-key god-mode-isearch-map (kbd "n") (lambda()
-                                             (interactive)
-                                             (isearch-exit)
-                                             (next-line)))
-(define-key god-mode-isearch-map (kbd "p") (lambda()
-                                             (interactive)
-                                             (isearch-exit)
-                                             (previous-line)))
+(define-key god-mode-isearch-map (kbd "v") 'scroll-up-command)
+(define-key god-mode-isearch-map (kbd "n") 'next-line)
+(define-key god-mode-isearch-map (kbd "p") 'previous-line)
 (defun god-mode-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         '(bar . 3)
@@ -132,5 +126,5 @@
 ;; Add: ~/.emacs.d/modules/prelude-c.el: 40: (local-unset-key (kbd "C-M-j"))
 ;; Mod: ~/.emacs.d/elpa/smartparens/smartparens.el: 206: ("M-D" . sp-splice-sexp)
 ;; Mod: ~/.emacs.d/elpa/god-mode/god-mode.el: 45: ("m" . "M-")
-;; Del: ~/.emacs.d/core/prelude-mode.el: 46: ;; 
+;; Del: ~/.emacs.d/core/prelude-mode.el: 46: ;;
 ;; --------------------------------------
