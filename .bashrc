@@ -84,13 +84,14 @@ alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
 # Functional aliases
 # -- general  --
 cl() {
-    cd ${1-.} && lk
+    cd ${1-.} && ls -ltrhG
 }
 
 ei() {
     if [ -e "$1" ]; then
         enw "$1" --eval '(setq buffer-read-only t)'
-    else echo "File $1 not found!"
+    else
+        echo "File $1 not found!"
     fi
 }
 
@@ -100,10 +101,10 @@ mkcd() {
 
 cpcd() {
     if [ $# -lt 2 ]; then
-        echo "Must have at least 2 arguments!"; return
+        echo "Must have at least 2 arguments!"; return 1
     fi
     if [ -d ${!#} ]; then
-        cpi ${*%${!#}} ${!#} && cd ${!#}
+        cp -r ${*%${!#}} ${!#} && cd ${!#}
     else
         echo "${!#} is not an directory or does not exist!"
     fi
@@ -115,15 +116,12 @@ function rtb {
 
 function col {
     if [ $# -lt 1 ]; then
-        echo "usage: col <col #>"
-        return 1
+        echo "usage: col <col #>"; return 1
     fi
-    num=$1
-
-    if [[ $num -lt 0 ]]; then
-        awk "{print \$(NF+$((num+1)))}"
+    if [[ $1 -lt 0 ]]; then
+        awk "{print \$(NF+$(($1+1)))}"
     else
-        awk -v x=$num '{print $x}'
+        awk -v x=$1 '{print $x}'
     fi
 }
 
