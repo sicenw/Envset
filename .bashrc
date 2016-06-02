@@ -42,6 +42,7 @@ alias lt='ls -l -t -r -h'
 alias lk='ls -l -t -r -h -G'
 alias la='ls -l -t -r -a -h'
 alias lta='ls -l -t -r -a -h -G'
+alias lc='cl'
 alias cpi='cp -ri'
 alias root='root -l'
 alias req='root -l -q'
@@ -84,14 +85,22 @@ alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
 # Functional aliases
 # -- general  --
 cl() {
-    cd ${1-.} && ls -ltrhG
+    if [[ -z $1 ]]; then
+        ls -ltrhG
+    elif [[ -d $1 ]]; then
+        cd $1 && ls -ltrhG
+    elif [[ -f $1 ]]; then
+        cd $(dirname $1) && ls -ltrhG
+    else
+        echo "$1: No such directory or file"; return 1
+    fi
 }
 
 ei() {
     if [ -e "$1" ]; then
         enw "$1" --eval '(setq buffer-read-only t)'
     else
-        echo "File $1 not found!"
+        echo "File $1 not found!"; return 1
     fi
 }
 
@@ -100,14 +109,21 @@ mkcd() {
 }
 
 cpcd() {
+    while [[ $1 == "-*" ]]; do
+        local ops="$ops $1"; shift
+    done
     if [ $# -lt 2 ]; then
         echo "Must have at least 2 arguments!"; return 1
     fi
     if [ -d ${!#} ]; then
-        cp -r ${*%${!#}} ${!#} && cd ${!#}
+        cp -r $ops ${*%${!#}} ${!#} && cd ${!#}
     else
-        echo "${!#} is not an directory or does not exist!"
+        echo "${!#} is not an directory or does not exist!"; return 1
     fi
+}
+
+cpcl() {
+    cpcd $@ && ls -ltrhG
 }
 
 function rtb {
