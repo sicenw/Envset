@@ -92,7 +92,13 @@ cl() {
     elif [[ -f $1 ]]; then
         cd $(dirname $1) && ls -ltrhG
     else
-        echo "$1: No such directory or file"; return 1
+        local des=$(echo $1 | cut -d'/' --complement -f2-)
+        if [[ -d $des ]]; then
+            cd $des && ls -ltrhG
+            echo "\"$1\" is not a directory or file, come to \"$des\" instead"
+        else
+            echo "$1: No such directory or file"; return 1
+        fi
     fi
 }
 
