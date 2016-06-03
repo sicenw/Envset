@@ -84,6 +84,14 @@ alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
 
 # Functional aliases
 # -- general  --
+ei() {
+    if [ -e "$1" ]; then
+        enw "$1" --eval '(setq buffer-read-only t)'
+    else
+        echo "File $1 not found!"; return 1
+    fi
+}
+
 cl() {
     if [[ -z $1 ]]; then
         ls -ltrhG
@@ -102,34 +110,38 @@ cl() {
     fi
 }
 
-ei() {
-    if [ -e "$1" ]; then
-        enw "$1" --eval '(setq buffer-read-only t)'
-    else
-        echo "File $1 not found!"; return 1
-    fi
-}
-
 mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
+mkcp() {
+    mkdir -p ${!#} && cpcd $@
+}
+
 cpcd() {
-    while [[ $1 == "-*" ]]; do
-        local ops="$ops $1"; shift
-    done
     if [ $# -lt 2 ]; then
         echo "Must have at least 2 arguments!"; return 1
     fi
     if [ -d ${!#} ]; then
-        cp -r $ops ${*%${!#}} ${!#} && cd ${!#}
+        cp -r $@ && cd -- ${!#}
     else
-        echo "${!#} is not an directory or does not exist!"; return 1
+        cp -r $@ && cd $(dirname ${!#})
     fi
 }
 
 cpcl() {
     cpcd $@ && ls -ltrhG
+}
+
+mvcd() {
+    if [ $# -lt 2 ]; then
+        echo "Must have at least 2 arguments!"; return 1
+    fi
+    if [ -d ${!#} ]; then
+        mv $@ && cd -- ${!#}
+    else
+        mv $@ && cd $(dirname ${!#})
+    fi
 }
 
 function rtb {
