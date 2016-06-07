@@ -38,8 +38,8 @@ alias grep='grep --color=auto'
 
 # User aliases
 alias ls='ls --color=auto'
-alias lt='ls -l -t -r -h'
-alias lk='ls -l -t -r -h -G'
+alias lt='ls -l -t -r -h -G'
+alias lk='ls -l -t -r -h'
 alias la='ls -l -t -r -a -h'
 alias lta='ls -l -t -r -a -h -G'
 alias lc='cl'
@@ -73,8 +73,9 @@ alias c...='cl ../..'
 export HDP=/hadoop/cms/store/user/$USER
 export GHDP=/hadoop/cms/store/group/snt
 
-# Temporary aliases
+# Fast calls and cds
 alias mg='~/Generator/MG5_aMC_v2_3_2/bin/mg5_aMC'
+alias cweb='cd ~/public_html/'
 alias chdp='cd $HDP'
 alias cghdp='cd $GHDP/run2_25ns'
 alias cnfs='cd /nfs-6/userdata/mt2'
@@ -115,7 +116,19 @@ mkcd() {
 }
 
 mkcp() {
+    mkdir -p ${!#} && cp -r $@
+}
+
+mkmv() {
+    mkdir -p ${!#} && mv $@
+}
+
+mdcp() {
     mkdir -p ${!#} && cpcd $@
+}
+
+mdmv() {
+    mkdir -p ${!#} && mvcd $@
 }
 
 cpcd() {
