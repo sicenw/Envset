@@ -13,13 +13,13 @@
 ;; (setq prelude-theme 'solarized-dark)
 (setq prelude-whitespace nil)
 (setq prelude-flyspell nil)
-(setq electric-indent-mode nil)
+;; (setq electric-indent-mode nil)
 ;; (setq prelude-auto-save nil)
 (global-flycheck-mode -1)
 (remove-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 ;; ---- Adjusted features ----
-(setq scroll-margin 2)
+;; (setq scroll-margin 2)
 (setq scroll-conservatively 5)
 
 ;; ---- Additional features ----
@@ -33,6 +33,7 @@
 (setq display-time-day-and-date 't)
 (setq display-time-24hr-format 't)
 (display-time)
+(set-default 'truncate-lines t)
 
 ;; ---- Additional auto-mode ----
 (add-to-list 'auto-mode-alist '(".bash_aliases" . shell-script-mode))
@@ -54,16 +55,21 @@
 (global-set-key (kbd "C-\\")  'undo-tree-redo)
 (global-set-key (kbd "C-s-p") 'move-text-up)
 (global-set-key (kbd "C-s-n") 'move-text-down)
+(global-set-key (kbd "C-s-f") 'forward-whitespace)
+(global-set-key (kbd "C-s-b") (lambda()(interactive)(forward-whitespace -1)))
 (global-set-key (kbd "C-M-j") 'crux-duplicate-current-line-or-region)
 (global-set-key (kbd "C-s-j") 'crux-duplicate-and-comment-current-line-or-region)
 (global-set-key (kbd "s-SPC") 'just-one-space)
 (global-set-key (kbd "C-;")   'god-local-mode)
 (global-set-key (kbd "C-c ;") 'god-mode-all)
+(global-set-key (kbd "M-s r") 'rgrep)
 (global-set-key (kbd "M-s d d") 'ediff)
-(global-set-key (kbd "M-s d b") 'ediff-buffer)
+(global-set-key (kbd "M-s d b") 'ediff-buffers)
 (global-set-key (kbd "M-s d r") 'ediff-revision)
+(global-set-key (kbd "M-s d l") 'ediff-regions-linewise)
 (global-set-key (kbd "M-g t c") 'tramp-cleanup-connection)
 (global-set-key (kbd "M-g t a") 'tramp-cleanup-all-connections)
+(global-set-key (kbd "M-g i w") 'toggle-truncate-lines)
 
 ;; ---- Additional Key-chord bindings ----
 (key-chord-define-global "OO" 'other-window)
@@ -122,6 +128,7 @@
 (define-key company-active-map (kbd "M-i") 'company-complete-selection)
 (add-hook 'latex-mode-hook 'smartparens-mode)
 (add-hook 'latex-mode-hook (lambda() (key-chord-define latex-mode-map "==" "&=& ")))
+(key-chord-define c++-mode-map ".." "->")
 
 ;; --------------------------------------
 ;;  File modification required features:
