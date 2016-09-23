@@ -4,9 +4,9 @@
 ;; --------------------------------------
 
 ;; ---- Mac specifics ----
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'super)
-(set-frame-parameter nil 'fullscreen 'fullboth)
+;; (setq mac-command-modifier 'meta)
+;; (setq mac-option-modifier 'super)
+;; (set-frame-parameter nil 'fullscreen 'fullboth)
 
 ;; ---- Disable uncomfortable features ----
 ;; (disable-theme 'zenburn)
@@ -24,11 +24,15 @@
 
 ;; ---- Additional features ----
 (when (not (display-graphic-p))
+  (beacon-mode -1)
   (menu-bar-mode -1)
-  (global-hl-line-mode -1))
+  (global-hl-line-mode -1)
+  (disable-theme 'zenburn))
 (when  (display-graphic-p)
   (scroll-bar-mode -1)
   (setq confirm-kill-emacs 'yes-or-no-p))
+
+(set-frame-font "DejaVu Sans Mono-9:bold")
 
 (setq display-time-day-and-date 't)
 (setq display-time-24hr-format 't)
