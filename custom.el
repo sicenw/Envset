@@ -37,7 +37,7 @@
 (setq display-time-day-and-date 't)
 (setq display-time-24hr-format 't)
 (display-time)
-(set-default 'truncate-lines t)
+(set-default 'truncate-partial-width-windows 150)
 
 ;; ---- Additional auto-mode ----
 (add-to-list 'auto-mode-alist '(".bash_aliases" . shell-script-mode))
