@@ -26,8 +26,7 @@
 (when (not (display-graphic-p))
   (beacon-mode -1)
   (menu-bar-mode -1)
-  (global-hl-line-mode -1)
-  (disable-theme 'zenburn))
+  (global-hl-line-mode -1))
 (when  (display-graphic-p)
   (scroll-bar-mode -1)
   (setq confirm-kill-emacs 'yes-or-no-p))
@@ -64,8 +63,6 @@
 (global-set-key (kbd "C-M-j") 'crux-duplicate-current-line-or-region)
 (global-set-key (kbd "C-s-j") 'crux-duplicate-and-comment-current-line-or-region)
 (global-set-key (kbd "s-SPC") 'just-one-space)
-(global-set-key (kbd "C-;")   'god-local-mode)
-(global-set-key (kbd "C-c ;") 'god-mode-all)
 (global-set-key (kbd "M-s r") 'rgrep)
 (global-set-key (kbd "M-s d d") 'ediff)
 (global-set-key (kbd "M-s d b") 'ediff-buffers)
@@ -105,6 +102,8 @@
 
 ;; ---- God-mode configs ----
 (require 'god-mode)
+(global-set-key (kbd "C-;")   'god-local-mode)
+(global-set-key (kbd "C-c ;") 'god-mode-all)
 (define-key god-local-mode-map (kbd ".") 'repeat)
 (define-key god-local-mode-map (kbd "i") 'god-local-mode)
 (define-key god-local-mode-map (kbd "M-n") (lambda()
@@ -126,10 +125,24 @@
 (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
 (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor)
 
-;; ---- Other mode specific setup ----
+;; ---- Company configs ----
+(setq company-idle-delay 0)
+(setq company-dabbrev-code-ignore-case t)
+(global-set-key (kbd "M-i") 'company-complete)
 (define-key company-active-map (kbd "<return>") nil)
 (define-key company-active-map (kbd "RET") nil)
 (define-key company-active-map (kbd "M-i") 'company-complete-selection)
+(define-key company-active-map (kbd "TAB") 'company-indent-or-complete-common)
+(require 'color)
+(let ((bg (face-attribute 'default :background)))
+  (custom-set-faces
+   `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
+   `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
+   `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
+   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
+   `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+
+;; ---- Other mode specific setup ----
 (add-hook 'latex-mode-hook 'smartparens-mode)
 (add-hook 'latex-mode-hook (lambda() (key-chord-define latex-mode-map "==" "&=& ")))
 (key-chord-define c++-mode-map ".." "->")
