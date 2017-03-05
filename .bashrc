@@ -37,20 +37,23 @@ export TERM=xterm-256color
 alias grep='grep --color=auto'
 
 # User aliases
+alias shrc='. ~/.bashrc'
 alias ls='ls --color=auto'
 alias lt='ls -l -t -r -h -G'
-alias lk='ls -l -t -r -h'
 alias la='ls -l -t -r -a -h'
 alias lta='ls -l -t -r -a -h -G'
+alias lse='ls -l -t -r -h -G --sort=extension'
 alias lc='cl'
 alias cpi='cp -ri'
 alias root='root -l'
 alias req='root -l -q'
 alias rbq='root -l -b -q'
 alias rot='root -l -b -q'
-alias emsvr='emacs --daemon'
-alias em='emacsclient -t'
-alias enw='emacs -nw'
+alias emac='~/play/emacs-25.1/src/emacs &'
+alias emsvr='~/play/emacs-25.1/src/emacs --daemon'
+alias em='~/play/emacs-25.1/lib-src/emacsclient -t'
+alias e='~/play/emacs-25.1/lib-src/emacsclient -t'
+alias enw='~/play/emacs-25.1/src/emacs -q -nw'
 alias dui='du -hc --max-depth=1'
 alias gst='git st'
 alias gad='git add'
@@ -79,6 +82,7 @@ alias cweb='cd ~/public_html/'
 alias chdp='cd $HDP'
 alias cghdp='cd $GHDP/run2_25ns'
 alias cnfs='cd /nfs-6/userdata/mt2'
+alias cnfs7='cd /nfs-7/userdata/'
 alias clpr='cd ~/MT2Analysis/MT2looper && cms805'
 alias cbmk='cd ~/MT2Analysis/babymaker && cms805'
 alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
@@ -96,7 +100,7 @@ ei() {
 cl() {
     if [[ -z $1 ]]; then
         ls -ltrhG
-    elif [[ -d $1 ]]; then
+    elif [[ -d $1 ]] || [[ $1 == '-' ]]; then
         cd $1 && ls -ltrhG
     elif [[ -f $1 ]]; then
         cd $(dirname $1) && ls -ltrhG
@@ -182,11 +186,8 @@ mailme() {
 }
 
 # -- temporal --
-cms741() {
-    pushd ~/MT2Analysis/CMSSW_7_4_1_patch1/src/ > /dev/null
-    cmsenv
-    popd > /dev/null
-}
+alias rpmh="rot plotMakerHcand.C"
+alias mktab="rot plotMakerHcand.C && cd tables/compile/ && cp ../table.tex . && pdflatex table.tex && web table.pdf && ..."
 
 cms805() {
     pushd ~/MT2Analysis/CMSSW_8_0_5/src/ > /dev/null
