@@ -189,7 +189,7 @@ function col {
     fi
 }
 
-function rweb {
+function cjs {
     if [ $# -lt 1 ]; then
         echo "Usage: cjs <input root files>"; return 1
     fi
@@ -202,6 +202,25 @@ function rweb {
     for file in "$@"; do
         echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$(basename $file)"
     done
+}
+
+function ljs {
+    if [ $# -lt 1 ]; then
+        echo "Usage: lsj <input root files> <additional suffix (optional)>"; return 1
+    fi
+    local lnname=$1
+    if [[ ! $lnname == *.root ]]; then
+        echo "Error: Meaningless to put non-root file to jsroot"
+        echo "Usage: lsj <input root files> <additional suffix (optional)>"; return 1
+    fi
+    if [ -n $2 ]; then
+        lnname=$(basename $lnname .root)
+        lnname="$lnname_$2.root"
+    fi
+    ln -s $(pwd)/$1 ~/public_html/jsroot/files/$lnname
+    # chmod -R a+r ~/public_html/jsroot/files/
+
+    echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$lnname"
 }
 
 mailme() {
