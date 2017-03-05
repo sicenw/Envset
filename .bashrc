@@ -213,11 +213,15 @@ function ljs {
         echo "Error: Meaningless to put non-root file to jsroot"
         echo "Usage: lsj <input root files> <additional suffix (optional)>"; return 1
     fi
-    if [ -n $2 ]; then
+    if [ ! -z $2 ]; then
         lnname=$(basename $lnname .root)
-        lnname="$lnname_$2.root"
+        lnname="${lnname}_$2.root"
     fi
-    ln -s $(pwd)/$1 ~/public_html/jsroot/files/$lnname
+    echo "~/public_html/jsroot/files/$lnname"
+    if [ -L ~/public_html/jsroot/files/$lnname ]; then
+        echo "Warning: Replacing $lnname existed in jsroot as for $(readlink ~/public_html/jsroot/files/$lnname)"
+    fi
+    ln -sf $(pwd)/$1 ~/public_html/jsroot/files/$lnname
     # chmod -R a+r ~/public_html/jsroot/files/
 
     echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$lnname"
