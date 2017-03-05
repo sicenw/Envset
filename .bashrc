@@ -161,6 +161,19 @@ mvcd() {
     fi
 }
 
+kajobs() {
+    local pid=$(jobs -p)
+    if [ -n "${pid}" ]; then
+        kill -9 $pid
+    fi
+}
+
+webd() {
+    cp -r $1 ~/public_html/dump/
+    local addr="http://uaf-8.t2.ucsd.edu/~sicheng/dump/$1"
+    echo "Posted online at $addr"
+}
+
 function rtb {
     root $* ~/macros/openTBrowser.C -dir $PWD
 }
@@ -174,6 +187,21 @@ function col {
     else
         awk -v x=$1 '{print $x}'
     fi
+}
+
+function rweb {
+    if [ $# -lt 1 ]; then
+        echo "Usage: cjs <input root files>"; return 1
+    fi
+    if [[ $(hostname) == *uaf-* ]]; then
+        cp -rp $@ ~/public_html/jsroot/files/
+        chmod -R a+r ~/public_html/jsroot/files/
+    else
+        scp -rp $@ ${USER}@uaf-1.t2.ucsd.edu:~/public_html/jsroot/files/
+    fi
+    for file in "$@"; do
+        echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$(basename $file)"
+    done
 }
 
 mailme() {
