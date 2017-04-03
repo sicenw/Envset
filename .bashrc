@@ -62,6 +62,7 @@ alias gca='git ca'
 alias gam='git cam'
 alias gdf='git diff'
 alias gco='git co'
+alias gsh='git sh'
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -83,9 +84,6 @@ alias chdp='cd $HDP'
 alias cghdp='cd $GHDP/run2_25ns'
 alias cnfs='cd /nfs-6/userdata/mt2'
 alias cnfs7='cd /nfs-7/userdata/'
-alias clpr='cd ~/MT2Analysis/MT2looper && cms805'
-alias cbmk='cd ~/MT2Analysis/babymaker && cms805'
-alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
 
 # Functional aliases
 # -- general  --
@@ -161,6 +159,14 @@ mvcd() {
     fi
 }
 
+gcl() {
+    git clone "$1" && cl $(basename "$1" ".git")
+}
+
+cmsrelev() {
+    cmsrel "$1" && cd "$1/src" && cmsenv
+}
+
 kajobs() {
     local pid=$(jobs -p)
     if [ -n "${pid}" ]; then
@@ -204,25 +210,23 @@ function cjs {
     done
 }
 
-function ljs {
+function jsr {
     if [ $# -lt 1 ]; then
-        echo "Usage: lsj <input root files> <additional suffix (optional)>"; return 1
+        echo "Usage: jsr <input root files> <additional suffix (optional)>"; return 1
     fi
-    local lnname=$1
+    local lnname=$(basename $1)
     if [[ ! $lnname == *.root ]]; then
         echo "Error: Meaningless to put non-root file to jsroot"
-        echo "Usage: lsj <input root files> <additional suffix (optional)>"; return 1
+        echo "Usage: jsr <input root files> <additional suffix (optional)>"; return 1
     fi
     if [ ! -z $2 ]; then
         lnname=$(basename $lnname .root)
         lnname="${lnname}_$2.root"
     fi
-    echo "~/public_html/jsroot/files/$lnname"
     if [ -L ~/public_html/jsroot/files/$lnname ]; then
         echo "Warning: Replacing $lnname existed in jsroot as for $(readlink ~/public_html/jsroot/files/$lnname)"
     fi
     ln -sf $(pwd)/$1 ~/public_html/jsroot/files/$lnname
-    # chmod -R a+r ~/public_html/jsroot/files/
 
     echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$lnname"
 }
@@ -237,6 +241,9 @@ mailme() {
 }
 
 # -- temporal --
+alias clpr='cd ~/working/MT2Analysis/MT2looper && cms805'
+alias cbmk='cd ~/working/MT2Analysis/babymaker && cms805'
+alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
 alias rpmh="rot plotMakerHcand.C"
 alias mktab="rot plotMakerHcand.C && cd tables/compile/ && cp ../table.tex . && pdflatex table.tex && web table.pdf && ..."
 
