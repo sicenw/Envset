@@ -40,6 +40,7 @@ alias grep='grep --color=auto'
 alias shrc='. ~/.bashrc'
 alias ls='ls --color=auto'
 alias lt='ls -l -t -r -h -G'
+alias le='ls -ltrhG --ignore=*.{o,d,aux,pcm,so,d,nav,snm,pyc,toc}'
 alias la='ls -l -t -r -a -h'
 alias lta='ls -l -t -r -a -h -G'
 alias lse='ls -l -t -r -h -G --sort=extension'
@@ -52,8 +53,8 @@ alias rot='root -l -b -q'
 alias emac='~/play/emacs-25.1/src/emacs &'
 alias emsvr='~/play/emacs-25.1/src/emacs --daemon'
 alias em='~/play/emacs-25.1/lib-src/emacsclient -t'
-alias e='~/play/emacs-25.1/lib-src/emacsclient -t'
 alias enw='~/play/emacs-25.1/src/emacs -q -nw'
+alias py='python'
 alias dui='du -hc --max-depth=1'
 alias gst='git st'
 alias gad='git add'
@@ -76,10 +77,12 @@ alias c...='cl ../..'
 
 export HDP=/hadoop/cms/store/user/$USER
 export GHDP=/hadoop/cms/store/group/snt
+export CMSSW_HEADER_FILES=/cvmfs/cms.cern.ch/slc6_amd64_gcc530/cms/cmssw/CMSSW_8_0_26/src/
 
 # Fast calls and cds
 alias mg='~/Generator/MG5_aMC_v2_3_2/bin/mg5_aMC'
-alias cweb='cd ~/public_html/'
+alias cweb='cl ~/public_html/'
+alias cdmp='cl ~/public_html/dump'
 alias chdp='cd $HDP'
 alias cghdp='cd $GHDP/run2_25ns'
 alias cnfs='cd /nfs-6/userdata/mt2'
@@ -97,9 +100,9 @@ ei() {
 
 cl() {
     if [[ -z $1 ]]; then
-        ls -ltrhG
+        ls -ltrhG --ignore=*.{o,d,aux,pcm,so,d,nav,snm,pyc,toc}
     elif [[ -d $1 ]] || [[ $1 == '-' ]]; then
-        cd $1 && ls -ltrhG
+        cd $1 && ls -ltrhG --ignore=*.{o,d,aux,pcm,so,d,nav,snm,pyc,toc}
     elif [[ -f $1 ]]; then
         cd $(dirname $1) && ls -ltrhG
     else
@@ -174,9 +177,10 @@ kajobs() {
     fi
 }
 
-webd() {
+web() {
+    local fname=$(basename $1)
     cp -r $1 ~/public_html/dump/
-    local addr="http://uaf-8.t2.ucsd.edu/~sicheng/dump/$1"
+    local addr="http://uaf-8.t2.ucsd.edu/~sicheng/dump/$fname"
     echo "Posted online at $addr"
 }
 
@@ -224,7 +228,10 @@ function jsr {
         lnname="${lnname}_$2.root"
     fi
     if [ -L ~/public_html/jsroot/files/$lnname ]; then
-        echo "Warning: Replacing $lnname existed in jsroot as for $(readlink ~/public_html/jsroot/files/$lnname)"
+        local oldlink=$(readlink ~/public_html/jsroot/files/$lnname)
+        if [ ! $oldlink == $(readlink -f $1) ]; then
+            echo "Warning: Replacing link $lnname existed in jsroot for $oldlink"
+        fi
     fi
     ln -sf $(pwd)/$1 ~/public_html/jsroot/files/$lnname
 
@@ -242,10 +249,11 @@ mailme() {
 
 # -- temporal --
 alias clpr='cd ~/working/MT2Analysis/MT2looper && cms805'
+alias cspt='cd ~/working/MT2Analysis/scripts && cms805'
 alias cbmk='cd ~/working/MT2Analysis/babymaker && cms805'
 alias ctap='cd ~/working/MuonTagAndProbe/looper && cms805'
 alias rpmh="rot plotMakerHcand.C"
-alias mktab="rot plotMakerHcand.C && cd tables/compile/ && cp ../table.tex . && pdflatex table.tex && web table.pdf && ..."
+alias mktab="rot plotMakerHcand.C && cd latex/compile/ && cp ../table.tex . && pdflatex table.tex && web table.pdf && ..."
 
 cms805() {
     pushd ~/MT2Analysis/CMSSW_8_0_5/src/ > /dev/null
