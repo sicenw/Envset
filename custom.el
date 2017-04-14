@@ -9,7 +9,8 @@
 ;; (set-frame-parameter nil 'fullscreen 'fullboth)
 
 ;; ---- Disable uncomfortable features ----
-;; (disable-theme 'zenburn)
+(disable-theme 'zenburn)
+(load-theme 'tango-dark)
 ;; (setq prelude-theme 'solarized-dark)
 (setq prelude-whitespace nil)
 (setq prelude-flyspell nil)
@@ -113,7 +114,7 @@
                                              (interactive)
                                              (previous-line 5)))
 (define-key god-local-mode-map [escape]  'keyboard-quit)
-(define-key god-local-mode-map (kbd "M-s a") (lambda()
+(define-key god-local-mode-map (kbd "M-s .") (lambda()
                                                (interactive)
                                                (isearch-forward-symbol-at-point)
                                                (god-mode-isearch-activate)))
@@ -126,8 +127,10 @@
 (define-key god-mode-isearch-map (kbd "p") 'previous-line)
 (defun god-mode-update-cursor ()
   (setq cursor-type (if god-local-mode '(bar . 3) 'box)))
-(add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
-(add-hook 'god-mode-disabled-hook 'god-mode-update-cursor)
+(defun god-mode-update-theme ()
+  (load-theme (if god-local-mode 'wombat 'tango-dark)))
+(add-hook 'god-mode-enabled-hook 'god-mode-update-theme)
+(add-hook 'god-mode-disabled-hook 'god-mode-update-theme)
 
 ;; ---- Company configs ----
 (setq company-idle-delay 0)
