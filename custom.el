@@ -16,12 +16,13 @@
 (setq prelude-flyspell nil)
 ;; (setq electric-indent-mode nil)
 ;; (setq prelude-auto-save nil)
+(global-unset-key (kbd "C--"))
 (global-flycheck-mode -1)
 (remove-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 ;; ---- Adjusted features ----
 ;; (setq scroll-margin 2)
-(setq scroll-conservatively 5)
+(setq scroll-conservatively 7)
 
 ;; ---- Additional features ----
 (when (not (display-graphic-p))
@@ -37,7 +38,8 @@
 (setq display-time-day-and-date 't)
 (setq display-time-24hr-format 't)
 (display-time)
-(set-default 'truncate-partial-width-windows 150)
+
+(set-default 'truncate-partial-width-windows 120)
 
 ;; ---- Additional auto-mode ----
 (add-to-list 'auto-mode-alist '(".bash_aliases" . shell-script-mode))
@@ -72,6 +74,12 @@
 (global-set-key (kbd "M-g t c") 'tramp-cleanup-connection)
 (global-set-key (kbd "M-g t a") 'tramp-cleanup-all-connections)
 (global-set-key (kbd "M-g i w") 'toggle-truncate-lines)
+(global-set-key (kbd "M-n") (lambda()
+                              (interactive)
+                              (next-line 6)))
+(global-set-key (kbd "M-p") (lambda()
+                              (interactive)
+                              (previous-line 6)))
 
 ;; ---- Additional Key-chord bindings ----
 (key-chord-define-global "OO" 'other-window)
@@ -105,14 +113,14 @@
 (require 'god-mode)
 (global-set-key (kbd "C-;")   'god-local-mode)
 (global-set-key (kbd "C-c ;") 'god-mode-all)
+(global-set-key (kbd "M-s a") (lambda()
+                                (interactive)
+                                (isearch-forward-symbol-at-point)
+                                (god-mode-isearch-activate)))
 (define-key god-local-mode-map (kbd ".") 'repeat)
 (define-key god-local-mode-map (kbd "i") 'god-local-mode)
-(define-key god-local-mode-map (kbd "M-n") (lambda()
-                                             (interactive)
-                                             (next-line 5)))
-(define-key god-local-mode-map (kbd "M-p") (lambda()
-                                             (interactive)
-                                             (previous-line 5)))
+(define-key god-local-mode-map (kbd "r") 'evil-replace)
+(define-key god-local-mode-map (kbd "V") 'string-rectangle)
 (define-key god-local-mode-map [escape]  'keyboard-quit)
 (define-key god-local-mode-map (kbd "M-s .") (lambda()
                                                (interactive)
@@ -129,8 +137,11 @@
   (setq cursor-type (if god-local-mode '(bar . 3) 'box)))
 (defun god-mode-update-theme ()
   (load-theme (if god-local-mode 'wombat 'tango-dark)))
+;; (defun god-mode-update-message ()
+;;   (load-theme (if god-local-mode 'wombat 'tango-dark)))
 (add-hook 'god-mode-enabled-hook 'god-mode-update-theme)
 (add-hook 'god-mode-disabled-hook 'god-mode-update-theme)
+;; (add-hook 'buffer-list-update-hook 'god-mode-update-theme)
 
 ;; ---- Company configs ----
 (setq company-idle-delay 0)
@@ -140,26 +151,41 @@
 (define-key company-active-map (kbd "RET") nil)
 (define-key company-active-map (kbd "M-i") 'company-complete-selection)
 (define-key company-active-map (kbd "TAB") 'company-indent-or-complete-common)
-(require 'color)
-(let ((bg (face-attribute 'default :background)))
-  (custom-set-faces
-   `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
-   `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
-   `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
-   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
-   `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+;; (require 'color)
+;; (let ((bg (face-attribute 'default :background)))
+;;   (custom-set-faces
+;;    `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
+;;    `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
+;;    `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
+;;    `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
+;;    `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+
+;; ---- Smartparens configs ----
+(define-key smartparens-mode-map (kbd "M-<backspace>") nil)
+(define-key smartparens-mode-map (kbd "s-<backspace>") 'sp-backward-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "C-M-SPC") nil)
+(define-key smartparens-mode-map (kbd "C-M-u") nil)
+(define-key smartparens-mode-map (kbd "C-M-n") nil)
+(define-key smartparens-mode-map (kbd "C-M-p") nil)
+(define-key smartparens-mode-map (kbd "C-s-<backspace>") 'sp-splice-sexp-killing-around)
+(define-key smartparens-mode-map (kbd "s-f") 'sp-forward-symbol)
+(define-key smartparens-mode-map (kbd "s-b") 'sp-backward-symbol)
 
 ;; ---- Other mode specific setup ----
 (add-hook 'latex-mode-hook 'smartparens-mode)
 (add-hook 'latex-mode-hook (lambda() (key-chord-define latex-mode-map "==" "&=& ")))
 (key-chord-define c++-mode-map ".." "->")
+(define-key c++-mode-map (kbd "C-M-j") nil)
+(define-key c++-mode-map (kbd "C-c .") nil)
 
 ;; --------------------------------------
 ;;  File modification required features:
 ;; --------------------------------------
 ;; Mod: ~/.emacs.d/modules/prelude-c.el: 39: (c-basic-offset 2)
 ;; Add: ~/.emacs.d/modules/prelude-c.el: 40: (local-unset-key (kbd "C-M-j"))
-;; Mod: ~/.emacs.d/elpa/smartparens/smartparens.el: 206: ("M-D" . sp-splice-sexp)
 ;; Mod: ~/.emacs.d/elpa/god-mode/god-mode.el: 45: ("m" . "M-")
-;; Del: ~/.emacs.d/core/prelude-mode.el: 46: ;;
+;; Mod: ~/.emacs.d/core/prelude-editor.el: 88: (sp-use-smartparens-bindings)
+;; Mod: ~/.emacs.d/core/prelude-editor.el: 171-175: ;; ...
+;; Mod: ~/.emacs.d/core/prelude-editor.el: 302-305: ;; ...
+;; Mod: ~/.emacs.d/core/prelude-mode.el: 46: ;; ...
 ;; --------------------------------------
