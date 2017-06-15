@@ -7,13 +7,13 @@ export EDITOR="emacs -nw -q"
 # export EDITOR="emacsclient t"
 
 # Adding to PATH
-PATH=$PATH:$HOME/scripts/sh:$HOME/scripts/py
+PATH=$PATH:$HOME/scripts/sh:$HOME/scripts/py:$HOME/.local/bin
 
 export CVSROOT=:gserver:cmscvs.cern.ch:/cvs_server/repositories/CMSSW
 export CVS_RSH=ssh
 
 # PDFLATEX
-export PATH=/nfs-7/texlive/2015/bin/x86_64-linux:$PATH
+export PATH=$PATH:/nfs-7/texlive/2015/bin/x86_64-linux
 
 # CMS
 export CMS_PATH=/code/osgcode/cmssoft/cms
@@ -47,6 +47,7 @@ alias lta='ls -l -t -r -a -h -G'
 alias lse='ls -l -t -r -h -G --sort=extension'
 alias lc='cl'
 alias cpi='cp -ri'
+alias clip='echo "$_" | pbcopy'
 alias root='root -l'
 alias req='root -l -q'
 alias rbq='root -l -b -q'
@@ -56,16 +57,17 @@ alias emsvr='~/play/emacs-25.1/src/emacs --daemon'
 alias emc='~/play/emacs-25.1/lib-src/emacsclient -t'
 alias enw='~/play/emacs-25.1/src/emacs -q -nw'
 alias ei='em'
-alias py='python'
 alias dui='du -hc --max-depth=1'
 alias gst='git st'
 alias gad='git add'
 alias gcm='git cm'
 alias gca='git ca'
 alias gam='git cam'
-# alias gdf='git diff'
+alias gmd='git amd'
 alias gco='git co'
 alias gsh='git sh'
+alias condq='condor_q sicheng'
+alias pxyi='voms-proxy-init -hours 500'
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -90,6 +92,19 @@ alias chdp='cd $HDP'
 alias cghdp='cd $GHDP/run2_25ns'
 alias cnfs='cd /nfs-6/userdata/mt2'
 alias cnfs7='cd /nfs-7/userdata/'
+alias rrnd='rnd "root -l" root'
+alias ernd='rnd em'
+alias vrnd='rnd vi'
+alias crnd='rnd cd'
+alias sbf='cmsenv; cd $CMSSW_BASE ; scram b -f -j10 ; cd -'
+
+# Auto completion
+[ -f ~/.fzf/.fzf.bash ] && source ~/.fzf/.fzf.bash
+if [ -d ~/.fzf/.bash_completion.d ]; then
+    for file in ~/.fzf/.bash_completion.d/*; do
+        . $file
+    done
+fi
 
 # Functional aliases
 # -- general  --
@@ -114,7 +129,9 @@ gdf() {
         git add $fn
     elif [[ $2 == "co" ]]; then
         git checkout $fn
-    elif [[ $# == 1 ]]; then
+    elif [[ $2 == "ast" ]]; then
+        git add $fn && git status
+    elif [[ $# == 1  ]] && [[ ${1:0:1} != "-" ]]; then
         git diff $fn
     else
         git diff $@
@@ -155,6 +172,33 @@ em() {
         ~/play/emacs-25.1/lib-src/emacsclient -t $fn
     else
         ~/play/emacs-25.1/lib-src/emacsclient -t $@
+    fi
+}
+
+rnd() {
+    # local rndf=`ls -t *${2}* | head -n 1`
+    # local rndf=`find . *${2}* -maxdepth 0 | tail -n 1`
+    if [[ -z $2 ]]; then
+        local rndf=`ls -ltr | awk '{if ($5 != 0) print $9}' | tail -n 1`
+    elif [[ $2 == "*/*" ]]; then
+        local rndf=`ls -ltr *${2}* | awk '{if ($5 != 0) print $9}' | tail -n 1`
+    else
+        local rndf=`ls -ltr | grep ${2} | awk '{if ($5 != 0) print $9}' | tail -n 1`
+    fi
+    if [[ $rndf != "" ]]; then
+        echo "$1 $rndf"
+        $1 $rndf
+        history -s "$1 $rndf"
+    else
+        echo "Fail to find any random file."
+    fi
+}
+
+py() {
+    if [ -f "${1}py" ] && [ $# == 1 ]; then
+        python ${1}py
+    else
+        python $@
     fi
 }
 
@@ -261,6 +305,7 @@ web() {
     cp -r $1 ~/public_html/dump/
     local addr="http://uaf-8.t2.ucsd.edu/~${USER}/dump/$fname"
     echo "Posted online at $addr"
+    echo $addr | pbcopy
 }
 
 function rtb {
@@ -290,6 +335,7 @@ function cjs {
     fi
     for file in "$@"; do
         echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$(basename $file)"
+        echo "$_" | pbcopy
     done
 }
 
@@ -314,7 +360,8 @@ function jsr {
     fi
     ln -sf $(pwd)/$1 ~/public_html/jsroot/files/$lnname
 
-    echo "http://uaf-8.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$lnname"
+    echo "http://uaf-6.t2.ucsd.edu/~${USER}/jsroot/index.htm?file=files/$lnname"
+    echo "$_" | pbcopy
 }
 
 mailme() {
@@ -332,10 +379,15 @@ alias cspt='cd ~/working/MT2Analysis/scripts && sw805'
 alias cbmk='cd ~/working/MT2Analysis/babymaker && sw805'
 alias ctap='cd ~/working/MuonTagAndProbe/looper && sw805'
 alias ccrd='cd ~/working/MT2Analysis/scripts/cards && hclev'
+alias cmvt='cd ~/working/metvalidation/CMSSW_9_2_1/src/CMS3/NtupleMaker/test'
+alias cmvl='cd ~/working/metvalidation/looper && sw921'
 alias rpmh="rot plotMakerHcand.C"
 alias mktab="rot plotMakerHcand.C && cd latex/compile/ && cp ../table.tex . && pdflatex table.tex && web table.pdf && ..."
+alias mclean="rm *.so *.pcm *.d"
 
 alias sw805="pushd ~/working/MT2Analysis/CMSSW_8_0_5/src/ > /dev/null && cmsenv && popd > /dev/null"
 alias sw747="pushd ~/working/MT2Analysis/CMSSW_7_4_7/src/ > /dev/null && cmsenv && popd > /dev/null"
 alias sw826="pushd ~/working/CMSSW_8_0_26_patch1/src/ > /dev/null && cmsenv && popd > /dev/null"
+alias sw921="pushd ~/working/metvalidation/CMSSW_9_2_1/src/ > /dev/null && cmsenv && popd > /dev/null"
 alias hclev="pushd ~/working/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/ > /dev/null && cmsenv && . env_standalone.sh > /dev/null && popd > /dev/null"
+
